@@ -3,6 +3,8 @@ package com.procesos.tienda.controller;
 import com.procesos.tienda.model.User;
 import com.procesos.tienda.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,27 +14,28 @@ public class UserController {
     @Autowired
     private UserService userService;
     @GetMapping("users/{id}")
-    public User getUserById(@PathVariable long id){
-       return  userService.getUserById(id);
+    public ResponseEntity<User> getUserById(@PathVariable long id){
+       return  ResponseEntity.ok(userService.getUserById(id));
     }
 
     @PostMapping("users")
-    public User create(@RequestBody User user){
-        return userService.createUser(user);
+    public ResponseEntity<User> create(@RequestBody User user){
+
+        return  new ResponseEntity<>(userService.createUser(user), HttpStatus.CREATED);
     }
 
     @PutMapping ("users/{id}")
-    public User update(@RequestBody User user,@PathVariable long id){
+    public ResponseEntity<User> update(@RequestBody User user,@PathVariable long id){
 
-        return userService.updateUser(user,id);
+        return new ResponseEntity<>(userService.updateUser(user,id),HttpStatus.OK);
     }
     @DeleteMapping ("users/{id}")
-    public Boolean delete(@PathVariable Long id){
+    public ResponseEntity<String> delete(@PathVariable Long id){
 
-        return userService.deleteUser(id);
+        return new ResponseEntity(userService.deleteUser(id), HttpStatus.NO_CONTENT);
     }
     @GetMapping("users")
-    public List<User> findtAll(){
-        return userService.findAllUsers();
+    public ResponseEntity<List<User>> findtAll(){
+        return  ResponseEntity.ok(userService.findAllUsers());
     }
 }
